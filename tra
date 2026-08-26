@@ -240,7 +240,7 @@ if is.Skeleton.Vault.Hinge.Motor.C1.RightVector.X == 1 then
 end
 hrp.CFrame = CFrame.new(is.Model.Rob.Gold.Position) + Vector3.new(0,3,0)
 repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
-task.wait(1)
+task.wait(2)
 hrp.CFrame = is.Model.Rob.Gold.CFrame + is.Model.Rob.Gold.CFrame.RightVector * 15
 bv:Destroy()
 task.wait(3)
