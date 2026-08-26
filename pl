@@ -31,7 +31,7 @@ Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if not TeleportCheck and queueteleport then
 		TeleportCheck = true
 		queueteleport([[
-            loadstring(game:HttpGet('https://pastefy.app/92V6f11m/raw'))()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/pl'))()
         ]])
 	end
 end)
