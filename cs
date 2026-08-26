@@ -92,21 +92,7 @@ for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersG
 		end
 	end)
 end
-spawn(function()
-	while task.wait() do
-		for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersGui:GetChildren()) do
-			pcall(function()
-				local robname = v.ImageLabel.ImageLabel.Image
-				if robname == asset and v.Visible == true then
-					is = true
-				elseif not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PowerPlantRobberyGui") and robname == asset and v.Visible == false then
-					task.wait(1)
-					teleport()
-				end
-			end)
-		end
-	end
-end)
+
 if is == nil then
 	teleport()
 	return
