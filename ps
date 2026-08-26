@@ -1,0 +1,244 @@
+local tp = loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/Server/refs/heads/main/bb", true))()
+_G.hook = false
+local function teleport()
+if _G.hook then return end
+_G.hook = true
+	if _G.tp == "change" then
+		tp:changelogsteleport("PowerPlant")
+	elseif _G.tp == "jb" then
+		tp:jbteleport("POWER_PLANT")
+		else
+        tp:random()
+	end
+end
+
+local asset = "rbxassetid://105699516772445"
+
+local function missing(t, f, fallback)
+	if type(f) == t then return f end
+	return fallback
+end
+
+local queueteleport = missing("function", 
+	queue_on_teleport 
+		or (syn and syn.queue_on_teleport) 
+		or (fluxus and fluxus.queue_on_teleport)
+)
+
+local TeleportCheck = false
+local Players = game:GetService("Players")
+Players.LocalPlayer.OnTeleport:Connect(function(State)
+	if not TeleportCheck and queueteleport then
+		TeleportCheck = true
+		queueteleport([[
+            loadstring(game:HttpGet('https://pastefy.app/pflxmQCT/raw'))()
+        ]])
+	end
+end)
+spawn(function()
+	while task.wait() do
+		for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersGui:GetChildren()) do
+			pcall(function()
+				local robname = v.ImageLabel.ImageLabel.Image
+				if robname == asset and v.Visible == true then
+					is = true
+				elseif not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PowerPlantRobberyGui") and robname == asset and v.Visible == false then
+					task.wait(1)
+					teleport()
+				end
+			end)
+		end
+	end
+end)
+spawn(function()
+  while wait(1) do
+      pcall(function()
+          if game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed == 0 then
+              teleport()
+          end
+      end)
+  end
+end)
+for i = 1, 5 do
+	pcall(function()
+		local UserInputService = game:GetService("UserInputService")
+		local VirtualInputManager = game:GetService("VirtualInputManager")
+		local button = game:GetService("Players").LocalPlayer.PlayerGui.TeamSelectGui.TeamSelect.Frame.MiddleContainer.Container.Criminal
+		local pos = button.AbsolutePosition
+		local size = button.AbsoluteSize
+
+		local x = pos.X + size.X / 2
+		local y = pos.Y + size.Y / 2
+
+		VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 0)
+		task.wait()
+		VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 0)
+		task.wait(1)
+	end)
+end
+task.wait(2)
+if workspace.CurrentCamera.CameraType == Enum.CameraType.Scriptable then
+	teleport()
+end
+local is = nil
+for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersGui:GetChildren()) do
+	pcall(function()
+		local robname = v.ImageLabel.ImageLabel.Image
+		if robname == asset and v.Visible == true then
+			is = true
+		elseif game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == false and robname == asset and v.Visible == false then
+			task.wait(1)
+			teleport()
+		end
+	end)
+end
+
+if is == nil then
+	teleport()
+	return
+end
+local VirtualInputManager = game:GetService("VirtualInputManager")
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart:AddTag('NoFallDamage')
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart:AddTag('NoRagdoll')
+local character = game:GetService("Players").LocalPlayer.Character
+game:GetService("RunService").RenderStepped:Connect(function()
+	for i, v in game:GetService("Players").LocalPlayer.Character:GetChildren() do
+		if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+			v.CanCollide = false
+			v.CanTouch = false
+		end
+	end
+end)
+infJump = game:GetService("UserInputService").JumpRequest:Connect(function()
+	if not infJumpDebounce then
+		infJumpDebounce = true
+		game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+		task.wait()
+		infJumpDebounce = false
+	end
+end)
+local bv = nil
+local hrp = character.HumanoidRootPart
+local function moveTo(targetPos, moveSpeed)
+	local disct = 1
+	if character.Humanoid.Sit == true then
+		disct = 5
+	end
+	repeat
+		task.wait()
+		direction = (targetPos - hrp.Position).Unit
+		bv.Velocity = direction * moveSpeed
+	until (targetPos - hrp.Position).Magnitude <= disct
+	bv.Velocity = Vector3.zero
+end
+bv = Instance.new("BodyVelocity")
+bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bv.Velocity = Vector3.zero
+bv.Parent = hrp
+local vec = hrp.Position + Vector3.new(0,30,0)
+moveTo(vec,35)
+moveTo(Vector3.new(-1276, 50, -1446),100)
+moveTo(Vector3.new(-1221, 50, -1348),100)
+local vec1 = hrp.Position
+moveTo(vec1-Vector3.new(0,30,0),35)
+local drive = nil
+local t = os.time()
+repeat
+	game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E.Value, false, nil)
+	task.wait()
+	game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
+	task.wait(1)
+	for i, v in workspace.Vehicles:GetChildren() do
+		if v:GetAttribute("LastDriverId") == game:GetService("Players").LocalPlayer.UserId then
+			drive = v
+			break
+		end
+	end
+	if character.Humanoid.Sit == true and drive == nil or os.time() - t >= 5 then
+		game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space.Value, false, nil)
+		task.wait()
+		game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space.Value, false, nil)
+		moveTo(Vector3.new(-1221, 20, -1348),100)
+		local args = {"Chassis", "Camaro"}
+		game:GetService("ReplicatedStorage"):WaitForChild("GarageSpawnVehicle"):FireServer(unpack(args))
+		wait(.5)
+		if character.Humanoid.Sit == true then
+			break
+		end
+	end
+until character.Humanoid.Sit == true and drive ~= nil
+for i, v in workspace.Vehicles:GetChildren() do
+	if v:FindFirstChild("_VehicleState_"..character.Name) then
+		local my = Instance.new("IntValue",v)
+		my.Name = "Mycar"
+	end
+end
+moveTo(Vector3.new(-558, 129, -469),450)
+moveTo(Vector3.new(-307, 140, 1155),450)
+moveTo(Vector3.new(414, 96, 2086),450)
+moveTo(Vector3.new(539, 41, 2649),450)
+task.wait(.2)
+game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space.Value, false, nil)
+task.wait()
+game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space.Value, false, nil)
+moveTo(Vector3.new(562, 36, 2668),100)
+repeat task.wait() until workspace.PowerPlant.Door.Transparency == .5
+moveTo(Vector3.new(550, 44, 2675),100)
+moveTo(Vector3.new(583, 40, 2706),100)
+moveTo(Vector3.new(584, -10, 2707),100)
+moveTo(Vector3.new(524, -15, 2652),100)
+moveTo(Vector3.new(529, -24, 2657),100)
+moveTo(Vector3.new(566, -27, 2622),100)
+moveTo(Vector3.new(563, -27, 2566),100)
+repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("PowerPlantRobberyGui")
+
+moveTo(Vector3.new(610, -14, 2587),100)
+moveTo(Vector3.new(668, 7, 2605),100)
+
+moveTo(Vector3.new(614, 31, 2666),100)
+moveTo(Vector3.new(609, 37, 2654),100)
+moveTo(Vector3.new(596, 34, 2622),100)
+for i, v in workspace.Vehicles:GetChildren() do
+	if v:GetAttribute("LastDriverId") == game:GetService("Players").LocalPlayer.UserId then
+		local pos = v.Engine.CFrame + v.Engine.CFrame.RightVector * -5
+		moveTo(pos.Position,100)
+		task.wait(.2)
+		game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E.Value, false, nil)
+		task.wait()
+		game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
+		task.wait(1)
+		break
+	end
+end
+if character.Humanoid.Sit == false then
+	repeat
+		task.wait(.3)
+		for i, v in workspace.Vehicles:GetChildren() do
+			if v.Name == "Camaro" and (hrp.Position - v.Engine.Position).magnitude <= 50 then
+				local pos = v.Engine.CFrame + v.Engine.CFrame.RightVector * -5
+				moveTo(pos.Position,100)
+				task.wait(.2)
+				game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E.Value, false, nil)
+				task.wait()
+				game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
+				task.wait(1)
+				break
+			end
+		end
+		if character.Humanoid.Sit == false then
+			local args = {"Chassis", "Camaro"}
+			game:GetService("ReplicatedStorage"):WaitForChild("GarageSpawnVehicle"):FireServer(unpack(args))
+		end
+	until character.Humanoid.Sit == true
+end
+moveTo(Vector3.new(742, 173, 1780),450)
+moveTo(Vector3.new(1694, 300, -2048),450)
+moveTo(Vector3.new(1689, 67, -2053),450)
+task.wait(11)
+moveTo(Vector3.new(1729, 73, -2046),100)
+moveTo(Vector3.new(1751, 69, -2040),100)
+moveTo(Vector3.new(1755, 41, -2042),100)
+task.wait(1)
+bv:Destroy()
+task.wait(3)
+teleport()
