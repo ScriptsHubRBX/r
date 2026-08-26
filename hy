@@ -210,6 +210,8 @@ if value == "JBValues "..b then
 	_G.tp = "jb"
 elseif value == "Changelogs "..c then
 	_G.tp = "change"
+else
+_G.tp = "random"
 end		
 	saveCurrent()
 end)
