@@ -1,0 +1,496 @@
+local tp = loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/Server/refs/heads/main/bb", true))()
+_G.hook = false
+local function teleport()
+if _G.hook then return end
+_G.hook = true
+	if _G.tp == "change" then
+		tp:changelogsteleport("Bank")
+	elseif _G.tp == "jb" then
+		tp:jbteleport("BANK")
+		else
+			tp:random()
+	end
+end
+
+local asset = "rbxassetid://136495546278020"
+
+local function missing(t, f, fallback)
+	if type(f) == t then return f end
+	return fallback
+end
+
+local queueteleport = missing("function", 
+	queue_on_teleport 
+		or (syn and syn.queue_on_teleport) 
+		or (fluxus and fluxus.queue_on_teleport)
+)
+
+local TeleportCheck = false
+local Players = game:GetService("Players")
+Players.LocalPlayer.OnTeleport:Connect(function(State)
+	if not TeleportCheck and queueteleport then
+		TeleportCheck = true
+		queueteleport([[
+            loadstring(game:HttpGet('https://pastefy.app/TmUpW8Vc/raw'))()
+        ]])
+	end
+end)
+spawn(function()
+	while task.wait() do
+		for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersGui:GetChildren()) do
+			pcall(function()
+				local robname = v.ImageLabel.ImageLabel.Image
+				if robname == asset and v.Visible == true then
+					is = true
+				elseif game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == false and robname == asset and v.Visible == false then
+					task.wait(1)
+					teleport()
+				end
+			end)
+		end
+	end
+end)
+spawn(function()
+  while wait(1) do
+      pcall(function()
+          if game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed == 0 then
+              teleport()
+          end
+      end)
+  end
+end)
+for i = 1, 5 do
+	pcall(function()
+		local UserInputService = game:GetService("UserInputService")
+		local VirtualInputManager = game:GetService("VirtualInputManager")
+		local button = game:GetService("Players").LocalPlayer.PlayerGui.TeamSelectGui.TeamSelect.Frame.MiddleContainer.Container.Criminal
+		local pos = button.AbsolutePosition
+		local size = button.AbsoluteSize
+
+		local x = pos.X + size.X / 2
+		local y = pos.Y + size.Y / 2
+
+		VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 0)
+		task.wait()
+		VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 0)
+		task.wait(1)
+	end)
+end
+task.wait(2)
+if workspace.CurrentCamera.CameraType == Enum.CameraType.Scriptable then
+	teleport()
+end
+local is = nil
+for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersGui:GetChildren()) do
+	pcall(function()
+		local robname = v.ImageLabel.ImageLabel.Image
+		if robname == asset and v.Visible == true then
+			is = true
+		elseif game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == false and robname == asset and v.Visible == false then
+			task.wait(1)
+			teleport()
+		end
+	end)
+end
+if is == nil then
+	teleport()
+	return
+end
+spawn(function()
+	while wait(1) do
+		pcall(function()
+			firetouchinterest(game:GetService("Workspace").Banks.Bank.Layout:GetChildren()[1].TriggerDoor, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, 0)
+			task.wait()
+			firetouchinterest(game:GetService("Workspace").Banks.Bank.Layout:GetChildren()[1].TriggerDoor, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, 1)
+		end)
+	end
+end)
+local VirtualInputManager = game:GetService("VirtualInputManager")
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart:AddTag('NoFallDamage')
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart:AddTag('NoRagdoll')
+local character = game:GetService("Players").LocalPlayer.Character
+game:GetService("RunService").RenderStepped:Connect(function()
+	for i, v in game:GetService("Players").LocalPlayer.Character:GetChildren() do
+		if v:IsA("BasePart") then
+			v.CanCollide = false
+		end
+		if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+			v.CanTouch = false
+		end
+	end
+end)
+infJump = game:GetService("UserInputService").JumpRequest:Connect(function()
+	if not infJumpDebounce then
+		infJumpDebounce = true
+		game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+		task.wait()
+		infJumpDebounce = false
+	end
+end)
+local bv = nil
+local hrp = character.HumanoidRootPart
+local function moveTo(targetPos, moveSpeed)
+	local disct = 1
+	if character.Humanoid.Sit == true then
+		disct = 5
+	end
+	repeat
+		task.wait()
+		direction = (targetPos - hrp.Position).Unit
+		bv.Velocity = direction * moveSpeed
+	until (targetPos - hrp.Position).Magnitude <= disct
+	bv.Velocity = Vector3.zero
+end
+bv = Instance.new("BodyVelocity")
+bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bv.Velocity = Vector3.zero
+bv.Parent = hrp
+local vec = hrp.Position + Vector3.new(0,30,0)
+moveTo(vec,35)
+moveTo(Vector3.new(-1276, 50, -1446),100)
+moveTo(Vector3.new(-1221, 50, -1348),100)
+local vec1 = hrp.Position
+moveTo(vec1-Vector3.new(0,30,0),35)
+local drive = nil
+local t = os.time()
+repeat
+	game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E.Value, false, nil)
+	task.wait()
+	game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
+	task.wait(1)
+	for i, v in workspace.Vehicles:GetChildren() do
+		if v:GetAttribute("LastDriverId") == game:GetService("Players").LocalPlayer.UserId then
+			drive = v
+			break
+		end
+	end
+	if character.Humanoid.Sit == true and drive == nil or os.time() - t >= 5 then
+		game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space.Value, false, nil)
+		task.wait()
+		game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space.Value, false, nil)
+		moveTo(Vector3.new(-1221, 20, -1348),100)
+		local args = {"Chassis", "Camaro"}
+		game:GetService("ReplicatedStorage"):WaitForChild("GarageSpawnVehicle"):FireServer(unpack(args))
+		task.wait(.5)
+		if character.Humanoid.Sit == true then
+			break
+		end
+	end
+until character.Humanoid.Sit == true and drive ~= nil
+moveTo(Vector3.new(-152, 109, 94),400)
+moveTo(Vector3.new(-28, 37, 762),400)
+moveTo(Vector3.new(34, 19, 768),400)
+task.wait(.5)
+game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space.Value, false, nil)
+task.wait()
+game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space.Value, false, nil)
+moveTo(Vector3.new(30, 16, 771),50)
+moveTo(Vector3.new(28, 19, 807),50)
+moveTo(Vector3.new(56, 19, 827),50)
+repeat moveTo(Vector3.new(56, 18.5, 827),50) hrp.CFrame = CFrame.new(57, 18.5, 841) task.wait(1) until (hrp.Position - Vector3.new(57, 18.5, 841)).magnitude <= 2
+moveTo(Vector3.new(65, 19, 900),70)
+moveTo(Vector3.new(48, 19, 903),70)
+moveTo(Vector3.new(55, 19, 923),70)
+task.wait(1)
+if workspace.Banks.Bank.Layout:FindFirstChild("05Underwater") then
+	moveTo(Vector3.new(103, 1, 914),70)
+	moveTo(Vector3.new(92, -12, 868),70)
+	moveTo(Vector3.new(126, -12, 851),70)
+	moveTo(Vector3.new(144, -8, 847),70)
+	moveTo(Vector3.new(163, -8, 844),70)
+	task.wait(1)
+	repeat
+		door = false
+		for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+			task.wait(.1)
+			if v:GetChildren()[1].Transparency == 0 then
+				door = true
+			end
+		end
+	until door == false
+	moveTo(Vector3.new(176, -8, 841),70)
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(163, -8, 844),70)
+	moveTo(Vector3.new(144, -8, 847),70)
+	moveTo(Vector3.new(126, -12, 851),70)
+	moveTo(Vector3.new(92, -12, 868),70)
+	moveTo(Vector3.new(103, 1, 914),70)
+
+	moveTo(Vector3.new(55, 19, 923),70)
+	moveTo(Vector3.new(48, 19, 903),70)
+	moveTo(Vector3.new(65, 19, 900),70)
+	moveTo(Vector3.new(57, 19, 841),50)
+	repeat moveTo(Vector3.new(57, 18.7, 841),50) hrp.CFrame = CFrame.new(56, 18.7, 827) task.wait(1) until (hrp.Position - Vector3.new(56, 18.7, 827)).magnitude <= 2
+	moveTo(Vector3.new(56, 19, 827),70)
+	moveTo(Vector3.new(28, 19, 807),70)
+	moveTo(Vector3.new(30, 19, 771),30)
+end
+if workspace.Banks.Bank.Layout:FindFirstChild("03Corridor") then
+	moveTo(Vector3.new(61, 19, 922),70)
+	moveTo(Vector3.new(61, -8, 922),70)
+	moveTo(Vector3.new(109, -8, 914),70)
+	moveTo(Vector3.new(113, -8, 934),70)
+	moveTo(Vector3.new(131, -8, 929),70)
+	moveTo(Vector3.new(128, -8, 911),70)
+	moveTo(Vector3.new(182, -8, 901),70)
+	task.wait(1)
+	repeat
+		door = false
+		for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+			task.wait(.1)
+			if v:GetChildren()[1].Transparency == 0 then
+				door = true
+			end
+		end
+	until door == false
+	moveTo(Vector3.new(194, -8, 899),70)
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(182, -8, 901),70)
+	moveTo(Vector3.new(128, -8, 911),70)
+	moveTo(Vector3.new(131, -8, 929),70)
+	moveTo(Vector3.new(113, -8, 934),70)
+	moveTo(Vector3.new(109, -8, 914),70)
+	moveTo(Vector3.new(61, -8, 922),70)
+	moveTo(Vector3.new(61, 19, 922),70)
+
+	moveTo(Vector3.new(55, 19, 923),70)
+	moveTo(Vector3.new(48, 19, 903),70)
+	moveTo(Vector3.new(65, 19, 900),70)
+	moveTo(Vector3.new(57, 19, 841),50)
+	repeat moveTo(Vector3.new(57, 18.7, 841),50) hrp.CFrame = CFrame.new(56, 18.7, 827) task.wait(1) until (hrp.Position - Vector3.new(56, 18.7, 827)).magnitude <= 2
+	moveTo(Vector3.new(56, 19, 827),70)
+	moveTo(Vector3.new(28, 19, 807),70)
+	moveTo(Vector3.new(30, 19, 771),30)
+end
+if workspace.Banks.Bank.Layout:FindFirstChild("04Remastered") then
+	moveTo(Vector3.new(98, 1, 913),70)
+	moveTo(Vector3.new(92, 1, 874),70)
+	moveTo(Vector3.new(25, 1, 887),70)
+	task.wait(1)
+	repeat
+		door = false
+		for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+			task.wait(.1)
+			if v:GetChildren()[1].Transparency == 0 then
+				door = true
+			end
+		end
+	until door == false
+	moveTo(Vector3.new(15, 1, 889),70)
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(25, 1, 887),70)
+	moveTo(Vector3.new(92, 1, 874),70)
+	moveTo(Vector3.new(98, 1, 913),70)
+	moveTo(Vector3.new(55, 19, 923),70)
+	moveTo(Vector3.new(48, 19, 903),70)
+	moveTo(Vector3.new(65, 19, 900),70)
+	moveTo(Vector3.new(57, 19, 841),50)
+	repeat moveTo(Vector3.new(57, 18.7, 841),50) hrp.CFrame = CFrame.new(56, 18.7, 827) task.wait(1) until (hrp.Position - Vector3.new(56, 18.7, 827)).magnitude <= 2
+	moveTo(Vector3.new(56, 19, 827),70)
+	moveTo(Vector3.new(28, 19, 807),70)
+	moveTo(Vector3.new(30, 19, 771),30)
+end
+if workspace.Banks.Bank.Layout:FindFirstChild("07TheMint") then
+	moveTo(Vector3.new(104, 1, 917),70)
+	moveTo(Vector3.new(90, 1, 846),70)
+	moveTo(Vector3.new(58, 0, 852),70)
+	moveTo(Vector3.new(49, 1, 808),70)
+	task.wait(1)
+	repeat
+		door = false
+		for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+			task.wait(.1)
+			if v:GetChildren()[1].Transparency == 0 then
+				door = true
+			end
+		end
+	until door == false
+	moveTo(Vector3.new(47, 0, 797),70)
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(49, 1, 808),70)
+	moveTo(Vector3.new(58, 0, 852),70)
+	moveTo(Vector3.new(90, 1, 846),70)
+	moveTo(Vector3.new(104, 1, 917),70)
+
+	moveTo(Vector3.new(55, 19, 923),70)
+	moveTo(Vector3.new(48, 19, 903),70)
+	moveTo(Vector3.new(65, 19, 900),70)
+	moveTo(Vector3.new(57, 19, 841),50)
+	repeat moveTo(Vector3.new(57, 18.7, 841),50) hrp.CFrame = CFrame.new(56, 18.7, 827) task.wait(1) until (hrp.Position - Vector3.new(56, 18.7, 827)).magnitude <= 2
+	moveTo(Vector3.new(56, 19, 827),70)
+	moveTo(Vector3.new(28, 19, 807),70)
+	moveTo(Vector3.new(30, 19, 771),30)
+end
+if workspace.Banks.Bank.Layout:FindFirstChild("01UpperManagement") then
+	moveTo(Vector3.new(80, 30, 917),70)
+	moveTo(Vector3.new(88, 30, 916),70)
+	moveTo(Vector3.new(78, 46, 879),70)
+	moveTo(Vector3.new(74, 55, 861),70)
+	moveTo(Vector3.new(73, 55, 827),70)
+	moveTo(Vector3.new(42, 55, 837),70)
+	moveTo(Vector3.new(49, 62, 868),70)
+	moveTo(Vector3.new(54, 67, 898),70)
+	moveTo(Vector3.new(56, 67, 911),70)
+	task.wait(1)
+	repeat
+		door = false
+		for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+			task.wait(.1)
+			if v:GetChildren()[1].Transparency == 0 then
+				door = true
+			end
+		end
+	until door == false
+	moveTo(Vector3.new(56, 67, 922),70)
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(56, 67, 911),70)
+	moveTo(Vector3.new(54, 67, 898),70)
+	moveTo(Vector3.new(49, 62, 868),70)
+	moveTo(Vector3.new(42, 55, 837),70)
+	moveTo(Vector3.new(73, 55, 827),70)
+	moveTo(Vector3.new(74, 55, 861),70)
+	moveTo(Vector3.new(78, 46, 879),70)
+	moveTo(Vector3.new(88, 30, 916),70)
+	moveTo(Vector3.new(80, 30, 917),70)
+
+	moveTo(Vector3.new(55, 19, 923),70)
+	moveTo(Vector3.new(48, 19, 903),70)
+	moveTo(Vector3.new(65, 19, 900),70)
+	moveTo(Vector3.new(57, 19, 841),50)
+	repeat moveTo(Vector3.new(57, 18.7, 841),50) hrp.CFrame = CFrame.new(56, 18.7, 827) task.wait(1) until (hrp.Position - Vector3.new(56, 18.7, 827)).magnitude <= 2
+	moveTo(Vector3.new(56, 19, 827),70)
+	moveTo(Vector3.new(28, 19, 807),70)
+	moveTo(Vector3.new(30, 19, 771),30)
+end
+if workspace.Banks.Bank.Layout:FindFirstChild("02Basement") then
+	moveTo(Vector3.new(63, 19, 921),70)
+	moveTo(Vector3.new(85, 9, 915),70)
+	moveTo(Vector3.new(95, -1, 963),70)
+	moveTo(Vector3.new(67, -9, 972),70)
+	moveTo(Vector3.new(56, -9, 927),70)
+	moveTo(Vector3.new(39, -9, 953),70)
+	task.wait(1)
+	repeat
+		door = false
+		for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+			task.wait(.1)
+			if v:GetChildren()[1].Transparency == 0 then
+				door = true
+			end
+		end
+	until door == false
+	moveTo(Vector3.new(32, -9, 955),70)
+	moveTo(Vector3.new(8, -1, 959),70)
+	moveTo(Vector3.new(-9, -1, 962),70)
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(8, -1, 959),70)
+	moveTo(Vector3.new(32, -9, 955),70)
+	moveTo(Vector3.new(39, -9, 953),70)
+	moveTo(Vector3.new(56, -9, 927),70)
+	moveTo(Vector3.new(67, -9, 972),70)
+	moveTo(Vector3.new(95, -1, 963),70)
+	moveTo(Vector3.new(85, 9, 915),70)
+	moveTo(Vector3.new(63, 19, 921),70)
+
+	moveTo(Vector3.new(55, 19, 923),70)
+	moveTo(Vector3.new(48, 19, 903),70)
+	moveTo(Vector3.new(65, 19, 900),70)
+	moveTo(Vector3.new(57, 19, 841),50)
+	repeat moveTo(Vector3.new(57, 18.7, 841),50) hrp.CFrame = CFrame.new(56, 18.7, 827) task.wait(1) until (hrp.Position - Vector3.new(56, 18.7, 827)).magnitude <= 2
+	moveTo(Vector3.new(56, 19, 827),70)
+	moveTo(Vector3.new(28, 19, 807),70)
+	moveTo(Vector3.new(30, 19, 771),30)
+end
+if workspace.Banks.Bank.Layout:FindFirstChild("09Presidential") then
+	moveTo(Vector3.new(65, 20, 922),70)
+	moveTo(Vector3.new(62, -8, 922),70)
+	moveTo(Vector3.new(83, -7, 917),70)
+	moveTo(Vector3.new(98, -7, 993),70)
+	moveTo(Vector3.new(85, -7, 995),70)
+	task.wait(1)
+	repeat
+		door = false
+		for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+			task.wait(.1)
+			if v:GetChildren()[1].Transparency == 0 then
+				door = true
+			end
+		end
+	until door == false
+	moveTo(Vector3.new(39, -7, 1001),70)
+	moveTo(Vector3.new(31, -7, 956),70)
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(39, -7, 1001),70)
+	moveTo(Vector3.new(132, -7, 985),70)
+	moveTo(Vector3.new(120, -7, 921),70)
+	moveTo(Vector3.new(120, 19, 921),70)
+end
+
+if workspace.Banks.Bank.Layout:FindFirstChild("08Deductions") then
+	moveTo(Vector3.new(101, -3, 917),70)
+	is = true
+	if math.floor(workspace.Banks.Bank.Layout:GetChildren()[1].EscapeRoutes.BankDoor.Door.Model.Door.Position.X) == 115 and math.floor(workspace.Banks.Bank.Layout:GetChildren()[1].EscapeRoutes.BankDoor.Door.Model.Door.Position.Y) == 1 and math.floor(workspace.Banks.Bank.Layout:GetChildren()[1].EscapeRoutes.BankDoor.Door.Model.Door.Position.Z) == 995 then
+		moveTo(Vector3.new(112, -3, 992),70)
+		-- while wait() do
+			
+		-- end
+		repeat
+			door = false
+			for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].EscapeRoutes.BankDoor.Dynamite:GetChildren() do
+		game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E.Value, false, nil)
+				task.wait(.1)
+				if v:GetChildren()[1].Transparency == 0 then
+					door = true
+				end
+			end
+		until door == true
+		game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
+		task.wait(1)
+		repeat
+			door = false
+			for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].EscapeRoutes.BankDoor.Dynamite:GetChildren() do
+				task.wait(.1)
+				if v:GetChildren()[1].Transparency == 0 then
+					door = true
+				end
+			end
+		until door == false
+		moveTo(Vector3.new(116, -3, 1023),70)
+		moveTo(Vector3.new(113, -3, 1023),70)
+		task.wait(1)
+		repeat
+			door = false
+			for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+				task.wait(.1)
+				if v:GetChildren()[1].Transparency == 0 then
+					door = true
+				end
+			end
+		until door == false
+		moveTo(Vector3.new(97, -3, 1025),70)
+	else
+		moveTo(Vector3.new(99, -3, 894),70)
+		moveTo(Vector3.new(140, -3, 891),70)
+		moveTo(Vector3.new(156, -3, 1016),70)
+		task.wait(1)
+		repeat
+			door = false
+			for i, v in workspace.Banks.Bank.Layout:GetChildren()[1].Dynamite:GetChildren() do
+				task.wait(.1)
+				if v:GetChildren()[1].Transparency == 0 then
+					door = true
+				end
+			end
+		until door == false
+		moveTo(Vector3.new(97, -3, 1025),70)
+	end
+	repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+	moveTo(Vector3.new(158, -3, 1013),70)
+	moveTo(Vector3.new(145, -3, 951),70)
+	moveTo(Vector3.new(126, -3, 955),70)
+	moveTo(Vector3.new(120, -3, 924),70)
+	moveTo(Vector3.new(120, 18, 921),70)
+end
+bv:Destroy()
+task.wait(3)
+teleport()
