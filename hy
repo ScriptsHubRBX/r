@@ -175,7 +175,7 @@ local function teleport(name)
 	if best then is = true jb = true end
 end
 teleport("test")
-task.wait(.5)
+task.wait(1)
 if change then
 	c = "🟢"
 else
