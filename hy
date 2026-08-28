@@ -36,8 +36,8 @@ _G.tp = saves.tp
 local is = false
 local change = false
 local jb = false
-local API_BASE_URL = "https://service-creator-hub--scripthubrbx.replit.app/api"
-local SERVICE_ID   = 37   -- замени на ID своего сервиса из дашборда
+local API_BASE_URL = "https://nexus-key-dashboard.replit.app/api"
+local SERVICE_ID   = 6   -- замени на ID своего сервиса из дашборда
 -- ============================================================
 
 local Players        = game:GetService("Players")
@@ -45,20 +45,21 @@ local RunService     = game:GetService("RunService")
 local HttpService    = game:GetService("HttpService")
 
 local player    = Players.LocalPlayer
-local HEARTBEAT_INTERVAL = 15  -- секунды между heartbeat
+local HEARTBEAT_INTERVAL = 15
 
--- ──────────────────────────────────────────────────────────────
---  HTTP через экзекутор (совместимость с Synapse X, KRNL, Fluxus и др.)
--- ──────────────────────────────────────────────────────────────
 local httpReq = (syn and syn.request)
              or (http and http.request)
              or (fluxus and fluxus.request)
              or request
              or http_request
 
+local hwid = tostring(gethwid())
+if hwid == "" or hwid == "false" or hwid == "true" or hwid == "nil" then
+	--error("Executor вернул некорректный HWID")
+end
+
 local function httpPost(endpoint, data)
 	if not httpReq then
-		warn("[NexusKey] HTTP функция не найдена в этом экзекуторе!")
 		return nil
 	end
 	local body = HttpService:JSONEncode(data)
@@ -71,18 +72,15 @@ local function httpPost(endpoint, data)
 		})
 	end)
 	if not ok then
-		warn("[NexusKey] HTTP ошибка: " .. tostring(res))
 		return nil
 	end
 	if res.StatusCode ~= 200 then
-		warn("[NexusKey] Статус: " .. tostring(res.StatusCode) .. " | " .. tostring(res.Body))
 		return nil
 	end
 	local dok, decoded = pcall(function()
 		return HttpService:JSONDecode(res.Body)
 	end)
 	if not dok then
-		warn("[NexusKey] Ошибка декодирования JSON: " .. tostring(res.Body))
 		return nil
 	end
 	return decoded
@@ -90,7 +88,7 @@ end
 
 local function checkHwid()
 	local response = httpPost("/roblox/check-hwid", {
-		hwid      = tostring(gethwid()),
+		hwid      = hwid,
 		serviceId = SERVICE_ID,
 	})
 	if response == nil then return false, nil, nil end
