@@ -49,6 +49,7 @@ function key:checkHwid()
 	})
 	if response == nil then return false, nil, nil end
 	_G.found = response.found
+	_G.Pro = response.time
 	return response.found, response.keyValue, response.time
 end
 
@@ -63,6 +64,7 @@ function key:verifyKey(keyValue)
 		return false, "Не удалось подключиться к серверу ключей.", nil
 	end
 	_G.found = response.found
+	_G.Pro = response.time
 	return response.found, response.message, response.time
 end
 key:Load(6)
