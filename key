@@ -53,6 +53,7 @@ function key:checkHwid()
 		serviceId = SERVICE_ID,
 	})
 	if response == nil then return false, nil, nil end
+	_G.found = response.found
 	return response.found, response.keyValue, response.time
 end
 
