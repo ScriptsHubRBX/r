@@ -1,73 +1,6 @@
-local API_BASE_URL = "https://nexus-key-dashboard.replit.app/api"
-local SERVICE_ID   = 6
-
-local Players        = game:GetService("Players")
-local RunService     = game:GetService("RunService")
-local HttpService    = game:GetService("HttpService")
-
-local player    = Players.LocalPlayer
-local HEARTBEAT_INTERVAL = 15
-
-local httpReq = (syn and syn.request)
-             or (http and http.request)
-             or (fluxus and fluxus.request)
-             or request
-             or http_request
-
-local hwid = tostring(gethwid())
-if hwid == "" or hwid == "false" or hwid == "true" or hwid == "nil" then
-	--error("Executor вернул некорректный HWID")
-end
-
-local function httpPost(endpoint, data)
-	if not httpReq then
-		return nil
-	end
-	local body = HttpService:JSONEncode(data)
-	local ok, res = pcall(function()
-		return httpReq({
-			Url     = API_BASE_URL .. endpoint,
-			Method  = "POST",
-			Headers = { ["Content-Type"] = "application/json" },
-			Body    = body,
-		})
-	end)
-	if not ok then
-		return nil
-	end
-	if res.StatusCode ~= 200 then
-		return nil
-	end
-	local dok, decoded = pcall(function()
-		return HttpService:JSONDecode(res.Body)
-	end)
-	if not dok then
-		return nil
-	end
-	return decoded
-end
-
-local function checkHwid()
-	local response = httpPost("/roblox/check-hwid", {
-		hwid      = hwid,
-		serviceId = SERVICE_ID,
-	})
-	if response == nil then return false, nil, nil end
-	return response.found, response.keyValue, response.time
-end
-
-local function verifyKey(keyValue)
-	local response = httpPost("/roblox/activate", {
-		keyValue  = keyValue,
-		hwid      = hwid,
-		username  = player.Name,
-		serviceId = SERVICE_ID,
-	})
-	if response == nil then
-		return false, "Не удалось подключиться к серверу ключей.", nil
-	end
-	return response.found, response.message, response.time
-end
+local key = loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/key"))()
+key:Load(6)
+key:checkHwid()
 
 for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
     if v.Name == "ui" then
@@ -77,15 +10,14 @@ end
 local function load()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/hy"))()
 end
-local found = checkHwid()
-if not found then
+if not _G.found then
 local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/JTest/refs/heads/main/hh"))()
 
 local gui = UI:Window("Verify")
 local tab = gui:Tab("Password")
 
 	tab:Textbox("Enter",nil,function(value)
-		local succ = verifyKey(value)
+		local succ = key:verifyKey(value)
 		if succ then
 			for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
 				if v.Name == "ui" then
