@@ -1,25 +1,20 @@
-local SERVICE_ID = nil
 local key = {}
+local SERVICE_ID = nil
+local player = game:GetService("Players").LocalPlayer
+local API_BASE_URL = "https://nexus-key-dashboard.replit.app/api"
+_G.SERVICEID = nil
+local HttpService = game:GetService("HttpService")
 
 function key:Load(service)
-local API_BASE_URL = "https://nexus-key-dashboard.replit.app/api"
-SERVICE_ID   = service
+	_G.SERVICEID   = service
+end
 
-local Players        = game:GetService("Players")
-local RunService     = game:GetService("RunService")
-local HttpService    = game:GetService("HttpService")
-
-local player    = Players.LocalPlayer
-local HEARTBEAT_INTERVAL = 15
-
+local function httpPost(endpoint, data)
 local httpReq = (syn and syn.request)
              or (http and http.request)
              or (fluxus and fluxus.request)
              or request
              or http_request
-end
-
-local function httpPost(endpoint, data)
 	if not httpReq then
 		return nil
 	end
@@ -50,7 +45,7 @@ end
 function key:checkHwid()
 	local response = httpPost("/roblox/check-hwid", {
 		hwid      = tostring(gethwid()),
-		serviceId = SERVICE_ID,
+		serviceId = _G.SERVICEID,
 	})
 	if response == nil then return false, nil, nil end
 	_G.found = response.found
@@ -62,11 +57,14 @@ function key:verifyKey(keyValue)
 		keyValue  = keyValue,
 		hwid      = tostring(gethwid()),
 		username  = player.Name,
-		serviceId = SERVICE_ID,
+		serviceId = _G.SERVICEID,
 	})
 	if response == nil then
 		return false, "Не удалось подключиться к серверу ключей.", nil
 	end
+	_G.found = response.found
 	return response.found, response.message, response.time
 end
+key:Load(6)
+key:checkHwid()
 return key
