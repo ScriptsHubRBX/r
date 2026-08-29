@@ -1,0 +1,366 @@
+local tp = loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/Server/refs/heads/main/bb", true))()
+_G.hook = false
+local function teleport()
+if _G.hook then return end
+_G.hook = true
+--_G.tp = "Random"
+	if _G.tp == "change" then
+		tp:changelogsteleport("Jewelry")
+	elseif _G.tp == "jb" then
+		tp:jbteleport("JEWELRY")
+		else
+       -- tp:random()
+	end
+end
+
+local function missing(t, f, fallback)
+	if type(f) == t then return f end
+	return fallback
+end
+
+local queueteleport = missing("function", 
+	queue_on_teleport 
+		or (syn and syn.queue_on_teleport) 
+		or (fluxus and fluxus.queue_on_teleport)
+)
+
+local TeleportCheck = false
+
+game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
+	if not TeleportCheck and queueteleport then
+		TeleportCheck = true
+		queueteleport([[
+            --loadstring(game:HttpGet('https://pastefy.app/9DZq1XSf/raw'))()
+        ]])
+	end
+end)
+spawn(function()
+  while wait(1) do
+      pcall(function()
+          if game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed == 0 then
+              teleport()
+          end
+      end)
+  end
+end)
+spawn(function()
+	while task.wait() do
+		for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersGui:GetChildren()) do
+			pcall(function()
+				local robname = v.ImageLabel.ImageLabel.Image
+				if robname == "rbxassetid://118335970965314" and v.Visible == true then
+					is = true
+				elseif game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == false and robname == "rbxassetid://118335970965314" and v.Visible == false then
+					task.wait(1)
+					teleport()
+				end
+			end)
+		end
+	end
+end)
+for i = 1, 5 do
+	pcall(function()
+		local UserInputService = game:GetService("UserInputService")
+		local VirtualInputManager = game:GetService("VirtualInputManager")
+		local button = game:GetService("Players").LocalPlayer.PlayerGui.TeamSelectGui.TeamSelect.Frame.MiddleContainer.Container.Criminal
+		local pos = button.AbsolutePosition
+		local size = button.AbsoluteSize
+
+		local x = pos.X + size.X / 2
+		local y = pos.Y + size.Y / 2
+
+		VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 0)
+		task.wait()
+		VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 0)
+		task.wait(1)
+	end)
+end
+task.wait(2)
+if workspace.CurrentCamera.CameraType == Enum.CameraType.Scriptable then
+	teleport()
+end
+local is = nil
+for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.WorldMarkersGui:GetChildren()) do
+	pcall(function()
+		local robname = v.ImageLabel.ImageLabel.Image
+		if robname == "rbxassetid://118335970965314" and v.Visible == true then
+			is = true
+		elseif game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == false and robname == "rbxassetid://118335970965314" and v.Visible == false then
+			task.wait(1)
+			teleport()
+		end
+	end)
+end
+if is == nil then
+	teleport()
+	return
+end
+local VirtualInputManager = game:GetService("VirtualInputManager")
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart:AddTag('NoFallDamage')
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart:AddTag('NoRagdoll')
+local character = game:GetService("Players").LocalPlayer.Character
+game:GetService("RunService").RenderStepped:Connect(function()
+	for i, v in game:GetService("Players").LocalPlayer.Character:GetChildren() do
+		if v:IsA("BasePart") then
+			v.CanCollide = false
+		end
+		if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+			v.CanTouch = false
+		end
+	end
+end)
+infJump = game:GetService("UserInputService").JumpRequest:Connect(function()
+	if not infJumpDebounce then
+		infJumpDebounce = true
+		game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+		task.wait()
+		infJumpDebounce = false
+	end
+end)
+local bv = nil
+local hrp = character.HumanoidRootPart
+local function moveTo(targetPos, moveSpeed,tp)
+	local disct = 1.2
+	if character.Humanoid.Sit == true then
+		disct = 5
+	end
+	local start = tick()
+	repeat
+		task.wait()
+		direction = (targetPos - hrp.Position).Unit
+		bv.Velocity = direction * moveSpeed
+		if tick() - start >= 3 and tp then
+			moveTo(Vector3.new(99, 19, 1283),35)
+			moveTo(Vector3.new(99, 114, 1284),35)
+			moveTo(Vector3.new(109, 114, 1282),35)
+			moveTo(Vector3.new(113, 124, 1301),70)
+			moveTo(Vector3.new(-103, 91, 1453),70)
+			moveTo(Vector3.new(-268, 68, 1579),70)
+			moveTo(Vector3.new(-284, 21, 1607),70)
+			task.wait(.1)
+			bv:Destroy()
+			task.wait(3)
+			teleport()
+			while task.wait() do
+
+			end
+		end
+	until (targetPos - hrp.Position).Magnitude <= disct
+	bv.Velocity = Vector3.zero
+end
+bv = Instance.new("BodyVelocity")
+bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+bv.Velocity = Vector3.zero
+bv.Parent = hrp
+local vec = hrp.Position + Vector3.new(0,30,0)
+moveTo(vec,35)
+moveTo(Vector3.new(-1276, 50, -1446),70)
+moveTo(Vector3.new(-1221, 50, -1348),70)
+local vec1 = hrp.Position
+moveTo(vec1-Vector3.new(0,30,0),35)
+local drive = nil
+local t = os.time()
+repeat
+	game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E.Value, false, nil)
+	task.wait()
+	game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
+	task.wait(1)
+	for i, v in workspace.Vehicles:GetChildren() do
+		if v:GetAttribute("LastDriverId") == game:GetService("Players").LocalPlayer.UserId then
+			drive = v
+			break
+		end
+	end
+	if character.Humanoid.Sit == true and drive == nil or os.time() - t >= 5 then
+		game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space.Value, false, nil)
+		task.wait()
+		game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space.Value, false, nil)
+		moveTo(Vector3.new(-1221, 20, -1348),50)
+		local args = {"Chassis", "Camaro"}
+		game:GetService("ReplicatedStorage"):WaitForChild("GarageSpawnVehicle"):FireServer(unpack(args))
+		wait(.5)
+		if character.Humanoid.Sit == true then
+			break
+		end
+	end
+until character.Humanoid.Sit == true and drive ~= nil
+moveTo(Vector3.new(-200, 107, -172),350)
+moveTo(Vector3.new(-103, 92, 422),350)
+workspace:WaitForChild("Jewelrys"):WaitForChild("Jewelry"):WaitForChild("Wall")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+local raycastParams = RaycastParams.new()
+raycastParams.FilterDescendantsInstances = {workspace.Jewelrys.Jewelry.Boxes,character}
+raycastParams.IgnoreWater = true
+
+local function castRay(target)
+    local origin = hrp.Position
+    local direction = (target.Position - origin)
+    local result = workspace:Raycast(origin, direction, raycastParams)
+    if result then
+        return result
+    else
+        return nil
+    end
+end
+local function v2()
+	repeat 
+		moveTo(Vector3.new(100, 114, 1284),70)
+		task.wait(.1) 
+		game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E.Value, false, nil)
+		task.wait()
+		game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
+	until (hrp.Position - Vector3.new(100, 114, 1284)).magnitude <= 2
+		task.wait(2.5)
+		moveTo(Vector3.new(100, 23, 1284),70)
+		for i, v in workspace.Jewelrys.Jewelry.Boxes:GetChildren() do
+		if v.Transparency ~= 1 and (v.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 20 and v.Position.Y > 0 and castRay(v) == nil then
+			--game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3
+			game:GetService("TweenService"):Create(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(.2, Enum.EasingStyle.Linear),{CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3 + Vector3.new(0,3,0)}):Play()
+			task.wait(.2)
+			game:GetService("TweenService"):Create(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(.2, Enum.EasingStyle.Linear),{CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3}):Play()
+			task.wait(.2)
+			--moveTo(Vector3.new(v.Jewel.CFrame.Position + v.Jewel.CFrame.LookVector * 3),100)
+			repeat game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.F.Value, false, nil)
+					task.wait()
+					local Players = game:GetService("Players")
+					local player = Players.LocalPlayer
+					local character = player.Character or player.CharacterAdded:Wait()
+					local hrp = character:WaitForChild("HumanoidRootPart")
+
+					local target = v.Jewel
+
+					local targetPos = target.Position
+					local myPos = hrp.Position
+					local lookAt = Vector3.new(targetPos.X, myPos.Y, targetPos.Z)
+
+					hrp.CFrame = CFrame.lookAt(myPos, lookAt)
+					game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.F.Value, false, nil)
+			until v.Transparency == 1
+			moveTo(hrp.Position + Vector3.new(0,5,0),40)
+			break
+		end
+	end
+	if game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == false then
+		moveTo(Vector3.new(123, 29, 1305),70)
+		repeat wait()
+			for i, v in workspace.Jewelrys.Jewelry.Boxes:GetChildren() do
+				if v.Transparency ~= 1 and (v.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 30 and v.Position.Y > 0 and castRay(v) == nil then
+					--game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3
+					game:GetService("TweenService"):Create(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(.2, Enum.EasingStyle.Linear),{CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3 + Vector3.new(0,3,0)}):Play()
+					task.wait(.2)
+					game:GetService("TweenService"):Create(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(.2, Enum.EasingStyle.Linear),{CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3}):Play()
+					task.wait(.2)
+					--moveTo(Vector3.new(v.Jewel.CFrame.Position + v.Jewel.CFrame.LookVector * 3),100)
+					repeat game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.F.Value, false, nil)
+							task.wait()
+							local Players = game:GetService("Players")
+							local player = Players.LocalPlayer
+							local character = player.Character or player.CharacterAdded:Wait()
+							local hrp = character:WaitForChild("HumanoidRootPart")
+
+							local target = v.Jewel
+
+							local targetPos = target.Position
+							local myPos = hrp.Position
+							local lookAt = Vector3.new(targetPos.X, myPos.Y, targetPos.Z)
+
+							hrp.CFrame = CFrame.lookAt(myPos, lookAt)
+							game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.F.Value, false, nil)
+					until v.Transparency == 1
+					break
+				end
+			end
+		until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+		moveTo(hrp.Position + Vector3.new(0,5,0),40)
+		moveTo(Vector3.new(123, 29, 1305),70)
+	end
+	moveTo(Vector3.new(100, 23, 1284),70)
+	--moveTo(Vector3.new(99, 19, 1283),35)
+	moveTo(Vector3.new(99, 114, 1284),35)
+	moveTo(Vector3.new(109, 114, 1282),35)
+	moveTo(Vector3.new(113, 124, 1301),70)
+	moveTo(Vector3.new(-103, 91, 1453),70)
+	moveTo(Vector3.new(-268, 68, 1579),70)
+	moveTo(Vector3.new(-284, 21, 1607),70)
+end
+local is = false
+if workspace.Jewelrys.Jewelry.Wall:GetChildren()[1]:GetAttribute("DoorDuration")==1 then
+	is = true
+	moveTo(Vector3.new(73, 124, 1291),350)
+	task.wait(.5)
+	game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space.Value, false, nil)
+	task.wait()
+	game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space.Value, false, nil)
+	task.wait(.2)
+	v2()
+else
+--if workspace.Jewelrys.Jewelry.Wall:GetChildren()[1]:GetAttribute("DoorDuration")==0 then
+	moveTo(Vector3.new(67, 18, 1316),350)
+	task.wait(.2)
+	game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Space.Value, false, nil)
+	task.wait()
+	game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Space.Value, false, nil)
+	task.wait(.5)
+	moveTo(Vector3.new(90, 18, 1308),70)
+	for i, v in workspace.Jewelrys.Jewelry:GetChildren() do
+		if v.Name == "WindowEntry" then
+			firetouchinterest(v.LaserTouch, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, 0)
+			task.wait(.1)
+			firetouchinterest(v.LaserTouch, game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, 1)
+		end
+	end
+	moveTo(Vector3.new(102, 18, 1305),70)
+	task.wait(1)
+	if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(90, 18, 1308)).magnitude > 2 then
+		moveTo(Vector3.new(100, 23, 1284),70)
+		--123, 29, 1305
+		repeat wait()
+		for i, v in workspace.Jewelrys.Jewelry.Boxes:GetChildren() do
+			if v.Transparency ~= 1 and (v.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 20 and v.Position.Y > 0 and castRay(v) == nil then
+				--game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3
+				game:GetService("TweenService"):Create(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(.2, Enum.EasingStyle.Linear),{CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3 + Vector3.new(0,3,0)}):Play()
+				task.wait(.2)
+				game:GetService("TweenService"):Create(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(.2, Enum.EasingStyle.Linear),{CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3}):Play()
+				task.wait(.2)
+				--moveTo(Vector3.new(v.Jewel.CFrame.Position + v.Jewel.CFrame.LookVector * 3),100)
+				repeat game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.F.Value, false, nil)
+						task.wait()
+						local Players = game:GetService("Players")
+						local player = Players.LocalPlayer
+						local character = player.Character or player.CharacterAdded:Wait()
+						local hrp = character:WaitForChild("HumanoidRootPart")
+
+						local target = v.Jewel
+
+						local targetPos = target.Position
+						local myPos = hrp.Position
+						local lookAt = Vector3.new(targetPos.X, myPos.Y, targetPos.Z)
+
+						hrp.CFrame = CFrame.lookAt(myPos, lookAt)
+						game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.F.Value, false, nil)
+				until v.Transparency == 1
+				break
+			end
+		end
+		until game:GetService("Players").LocalPlayer.PlayerGui.RobberyMoneyGui.Frame.Visible == true
+		moveTo(Vector3.new(102, 16, 1305),200)
+		--wait(.1)
+		moveTo(Vector3.new(90, 16, 1308),200)
+		moveTo(Vector3.new(5, 117, 1369),70,"tp")
+		moveTo(Vector3.new(-268, 68, 1579),70)
+		moveTo(Vector3.new(-284, 21, 1607),70)
+	else
+		moveTo(Vector3.new(73, 124, 1291),70)
+		v2()
+	end
+end
+
+task.wait(.1)
+bv:Destroy()
+task.wait(3)
+teleport()
