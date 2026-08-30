@@ -315,8 +315,8 @@ else
 		end
 	end
 	moveTo(Vector3.new(102, 18, 1305),70)
-	task.wait(1)
-	if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(90, 18, 1308)).magnitude > 2 then
+	task.wait(2)
+	if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(90, 18, 1308)).magnitude > 1 then
 		moveTo(Vector3.new(100, 23, 1284),70)
 		--123, 29, 1305
 		repeat wait()
