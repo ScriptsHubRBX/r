@@ -321,7 +321,7 @@ else
 		--123, 29, 1305
 		repeat wait()
 		for i, v in workspace.Jewelrys.Jewelry.Boxes:GetChildren() do
-			if v.Transparency ~= 1 and (v.Position - Vector3.new(100, 23, 1284).magnitude <= 20 and v.Position.Y > 0 and castRay(v) == nil then
+			if v.Transparency ~= 1 and (v.Position - Vector3.new(100, 23, 1284)).magnitude <= 20 and v.Position.Y > 0 and castRay(v) == nil then
 				--game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3
 				game:GetService("TweenService"):Create(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(.2, Enum.EasingStyle.Linear),{CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3 + Vector3.new(0,3,0)}):Play()
 				task.wait(.2)
