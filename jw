@@ -9,7 +9,7 @@ _G.hook = true
 	elseif _G.tp == "jb" then
 		tp:jbteleport("JEWELRY")
 		else
-       -- tp:random()
+        tp:random()
 	end
 end
 
@@ -30,7 +30,7 @@ game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
 	if not TeleportCheck and queueteleport then
 		TeleportCheck = true
 		queueteleport([[
-            --loadstring(game:HttpGet('https://pastefy.app/9DZq1XSf/raw'))()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/jw'))()
         ]])
 	end
 end)
