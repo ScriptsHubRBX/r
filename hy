@@ -158,7 +158,7 @@ end)
 
 rob:Button("Jewerly [Detected]",function()
 	removeui()
-	loadstring(game:HttpGet('https://pastefy.app/9DZq1XSf/raw', true))()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/jw', true))()
 end)
 
 rob:Button("Power Plant", function()
