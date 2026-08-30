@@ -215,8 +215,8 @@ local function v2()
 		task.wait()
 		game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.E.Value, false, nil)
 	until (hrp.Position - Vector3.new(100, 114, 1284)).magnitude <= 2
-		task.wait(2.5)
-		moveTo(Vector3.new(100, 23, 1284),70)
+		task.wait(3)
+		moveTo(Vector3.new(100, 20, 1284),70)
 		for i, v in workspace.Jewelrys.Jewelry.Boxes:GetChildren() do
 		if v.Transparency ~= 1 and (v.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 20 and v.Position.Y > 0 and castRay(v) == nil then
 			--game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Jewel.CFrame + v.Jewel.CFrame.LookVector * 3
