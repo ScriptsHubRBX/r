@@ -75,6 +75,7 @@ function key:checkHwid()
             writefile(_G.file, ACCESS_KEY)
         end
         _G.found = true
+    _G.Pro = secondsToDHMS(initialized.getTimeLeft())
     else
         if isfile and isfile(_G.file) and delfile then
             delfile(_G.file)
@@ -82,7 +83,6 @@ function key:checkHwid()
         _G.found = false
     end
 
-    _G.Pro = secondsToDHMS(initialized.getTimeLeft())
     return _G.found, ACCESS_KEY, _G.Pro
 end
 
@@ -100,11 +100,11 @@ function key:verifyKey(keyValue)
             writefile(_G.file, ACCESS_KEY)
         end
         _G.found = true
+        _G.Pro = secondsToDHMS(initialized.getTimeLeft())
     else
         _G.found = false
     end
 
-    _G.Pro = secondsToDHMS(initialized.getTimeLeft())
     return _G.found, reason, _G.Pro
 end
 
