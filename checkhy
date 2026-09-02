@@ -1,5 +1,5 @@
 local key = loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/key"))()
-key:Load(6)
+key:Load("universalrbx","hyper")
 key:checkHwid()
 
 for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
