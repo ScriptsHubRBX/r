@@ -75,7 +75,9 @@ function key:checkHwid()
             writefile(_G.file, ACCESS_KEY)
         end
         _G.found = true
-    _G.Pro = secondsToDHMS(initialized.getTimeLeft())
+		if initialized.getTimeLeft() ~= nil then
+    		_G.Pro = secondsToDHMS(initialized.getTimeLeft())
+		end
     else
         if isfile and isfile(_G.file) and delfile then
             delfile(_G.file)
@@ -100,12 +102,13 @@ function key:verifyKey(keyValue)
             writefile(_G.file, ACCESS_KEY)
         end
         _G.found = true
-        _G.Pro = secondsToDHMS(initialized.getTimeLeft())
+		if initialized.getTimeLeft() ~= nil then
+        	_G.Pro = secondsToDHMS(initialized.getTimeLeft())
+		end
     else
         _G.found = false
     end
 
     return _G.found, reason, _G.Pro
 end
-
 return key
