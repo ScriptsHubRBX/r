@@ -1,72 +1,111 @@
 local key = {}
-local SERVICE_ID = nil
-local player = game:GetService("Players").LocalPlayer
-local API_BASE_URL = "https://nexus-key-dashboard.replit.app/api"
-_G.SERVICEID = nil
-local HttpService = game:GetService("HttpService")
+local function secondsToDHMS(totalSeconds)
+    totalSeconds = tonumber(totalSeconds) or 0
+    if totalSeconds < 0 then totalSeconds = 0 end
 
-function key:Load(service)
-	_G.SERVICEID   = service
+    local d = math.floor(totalSeconds / 86400)
+    local h = math.floor((totalSeconds % 86400) / 3600)
+    local m = math.floor((totalSeconds % 3600) / 60)
+    local s = math.floor(totalSeconds % 60)
+
+    return {d = d, h = h, m = m, s = s}
 end
+_G.SERVICEID = nil
+_G.file = nil
+_G.found = nil
+_G.Pro = nil
 
-local function httpPost(endpoint, data)
-local httpReq = (syn and syn.request)
-             or (http and http.request)
-             or (fluxus and fluxus.request)
-             or request
-             or http_request
-	if not httpReq then
-		return nil
-	end
-	local body = HttpService:JSONEncode(data)
-	local ok, res = pcall(function()
-		return httpReq({
-			Url     = API_BASE_URL .. endpoint,
-			Method  = "POST",
-			Headers = { ["Content-Type"] = "application/json" },
-			Body    = body,
-		})
-	end)
-	if not ok then
-		return nil
-	end
-	if res.StatusCode ~= 200 then
-		return nil
-	end
-	local dok, decoded = pcall(function()
-		return HttpService:JSONDecode(res.Body)
-	end)
-	if not dok then
-		return nil
-	end
-	return decoded
+local initialized = nil
+local ACCESS_KEY = nil
+
+function key:Load(service, file)
+    _G.SERVICEID = service
+    _G.file = file
+
+    -- Загрузка библиотеки
+    local sourceOk, source = pcall(function()
+        return game:HttpGet("https://secure.pandauth.com/pv4/lib")
+    end)
+    if not sourceOk then
+        warn("[Panda] Не удалось загрузить библиотеку: " .. tostring(source))
+        return
+    end
+
+    local libraryOk, PUSL = pcall(loadstring, source)
+    if not libraryOk then
+        warn("[Panda] Ошибка компиляции: " .. tostring(PUSL))
+        return
+    end
+
+    local initOk, init = pcall(PUSL)
+    if not initOk then
+        warn("[Panda] Ошибка инициализации: " .. tostring(init))
+        return
+    end
+    initialized = init
+
+    local configured, configureError = pcall(function()
+        initialized.configure({
+            serviceId = _G.SERVICEID,
+            debug = false,
+            kickOnDetect = false,
+        })
+    end)
+ 
 end
 
 function key:checkHwid()
-	local response = httpPost("/roblox/check-hwid", {
-		hwid      = tostring(gethwid()),
-		serviceId = _G.SERVICEID,
-	})
-	if response == nil then return false, nil, nil end
-	_G.found = response.found
-	_G.Pro = response.time
-	return response.found, response.keyValue, response.time
+    if not initialized then
+        return false
+    end
+
+    if isfile and isfile(_G.file) then
+        ACCESS_KEY = readfile(_G.file)
+    end
+
+    if not ACCESS_KEY or ACCESS_KEY == "" then
+        _G.found = false
+        return false
+    end
+
+    local validated, reason = initialized.validateEx(ACCESS_KEY)
+
+    if validated then
+        if writefile then
+            writefile(_G.file, ACCESS_KEY)
+        end
+        _G.found = true
+    else
+        if isfile and isfile(_G.file) and delfile then
+            delfile(_G.file)
+        end
+        _G.found = false
+    end
+
+    _G.Pro = secondsToDHMS(initialized.getTimeLeft())
+    return _G.found, ACCESS_KEY, _G.Pro
 end
 
 function key:verifyKey(keyValue)
-	local response = httpPost("/roblox/activate", {
-		keyValue  = keyValue,
-		hwid      = tostring(gethwid()),
-		username  = player.Name,
-		serviceId = _G.SERVICEID,
-	})
-	if response == nil then
-		return false, "Не удалось подключиться к серверу ключей.", nil
-	end
-	_G.found = response.found
-	_G.Pro = response.time
-	return response.found, response.message, response.time
+    if not initialized then
+        return false
+    end
+
+    ACCESS_KEY = keyValue
+
+    local validated, reason = initialized.validateEx(ACCESS_KEY)
+
+    if validated then
+        if writefile then
+            writefile(_G.file, ACCESS_KEY)
+        end
+        _G.found = true
+    else
+        _G.found = false
+    end
+
+    _G.Pro = secondsToDHMS(initialized.getTimeLeft())
+    return _G.found, reason, _G.Pro
 end
-key:Load(6)
-key:checkHwid()
+
 return key
