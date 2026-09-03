@@ -37,7 +37,7 @@ local is = false
 local change = false
 local jb = false
 local function teleport(name)
-	local TOKEN = "zd-cL3QB4d-oc2ZFN9Y94PSX1ArjZyfABFvvo_u8m5c"
+	local TOKEN = "hdcktHJzIuM-BP1VLhnxNeXrX16tUabY8MkgvXuFsE4"
 	local ROBBERY = "Jewelry"
 
 
