@@ -1,7 +1,128 @@
 local key = loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/key"))()
 key:Load("hyper","hyper")
 key:checkHwid()
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local TextService = game:GetService("TextService")
 
+local LocalPlayer = Players.LocalPlayer
+local CurrentCamera = workspace.CurrentCamera
+
+local BASE_RESOLUTION = Vector2.new(1539, 804)
+local FADE_TWEEN_INFO = TweenInfo.new(0.3, Enum.EasingStyle.Linear)
+local GROW_TWEEN_INFO = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
+
+local STYLES = {
+    Default = { Sound = 131184732929614, Color = Color3.fromRGB(249, 210, 49) },
+    Alert   = { Sound = 700153902,       TimePosition = 0.07, Color = Color3.fromRGB(249, 92, 49) },
+    Boss    = { Sound = 1843025542,      Color = Color3.fromRGB(255, 30, 0) },
+    Gift    = { Sound = 2671105631,      Color = Color3.fromRGB(0, 255, 0) },
+}
+
+local TYPE_CLICK_SOUND_ID = 215658476
+
+local function getTextLines(text)
+    local params = Instance.new("GetTextBoundsParams")
+    params.Text = text
+    params.Font = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Italic)
+    params.Size = 24
+    params.Width = 312
+    return math.ceil(TextService:GetTextBoundsAsync(params).Y / 24)
+end
+
+-- Аналог TypeWrite(text, callback, charsPerSecond) из модуля
+local function typeWrite(text, onUpdate, charsPerSecond)
+    local total = utf8.len(text) or #text
+    local delay = 1 / (charsPerSecond or 50)
+    task.spawn(function()
+        for i = 1, total do
+            local shown = text:sub(1, i)
+            if onUpdate(shown) == false then
+                return
+            end
+            task.wait(delay)
+        end
+        onUpdate(text)
+    end)
+end
+
+function notify(text)
+    local style = STYLES.Gift
+
+    local NotificationGui = LocalPlayer.PlayerGui.NotificationGui
+    local Templates = NotificationGui.Templates
+    local Container = NotificationGui.Container
+
+    -- === клон шаблона, как в оригинале ===
+    local ui = Templates.Notification:Clone()
+    ui.UIStroke.Color = style.Color
+    ui.Message.Text = text
+    ui.Message.MaxVisibleGraphemes = 0
+
+    -- === расчёт размера под количество строк (как в Hook) ===
+    local baseSize = ui.Size
+    local lines = getTextLines(text)
+    local targetSize = baseSize
+    if lines > 1 then
+        targetSize = UDim2.fromScale(baseSize.X.Scale, baseSize.Y.Scale * (1 + 0.5 * (lines - 1)))
+    end
+
+    -- === масштабирование TextSize и UIStroke.Thickness под текущий экран ===
+    local viewport = CurrentCamera.ViewportSize
+    local scale = math.min(viewport.X, viewport.Y) / math.min(BASE_RESOLUTION.X, BASE_RESOLUTION.Y)
+    ui.Message.TextSize = math.floor(24 * (viewport.Y / BASE_RESOLUTION.Y))
+    ui.UIStroke.Thickness = scale * 3
+
+    -- === старт с нулевой высоты и рост твином (как в Hook) ===
+    ui.Size = UDim2.fromScale(baseSize.X.Scale, 0)
+    TweenService:Create(ui, GROW_TWEEN_INFO, { Size = targetSize }):Play()
+
+    -- === звук печати (клик на каждый 3-й символ) — как Sound внутри ui в оригинале ===
+    local typeSound = Instance.new("Sound")
+    typeSound.SoundId = ("rbxassetid://%d"):format(TYPE_CLICK_SOUND_ID)
+    typeSound.Volume = 0.3
+    typeSound.Parent = ui
+
+    ui.Visible = true
+    ui.Parent = Container
+
+    -- === звук стиля (Gift) сразу при показе, как Audio.ObjectLocal в оригинале ===
+    local styleSound = Instance.new("Sound")
+    styleSound.SoundId = ("rbxassetid://%d"):format(style.Sound)
+    styleSound.Volume = 0.25
+    styleSound.TimePosition = style.TimePosition or 0
+    styleSound.Parent = ui
+    if NotificationGui.Enabled then
+        styleSound:Play()
+    end
+
+    -- === посимвольная печать текста ===
+    local tick = 1
+    local alive = true
+    typeWrite(text, function(shown)
+        if not alive then
+            return false
+        end
+        if tick == 1 and NotificationGui.Enabled then
+            typeSound:Play()
+        end
+        tick = tick % 3 + 1
+        ui.Message.MaxVisibleGraphemes = #shown
+    end, 50)
+
+    -- === Duration = 2, как в твоём вызове Notification.new ===
+    task.delay(2, function()
+        alive = false
+        TweenService:Create(ui, FADE_TWEEN_INFO, { BackgroundTransparency = 1 }):Play()
+        TweenService:Create(ui.Message, FADE_TWEEN_INFO, { TextTransparency = 1 }):Play()
+        TweenService:Create(ui.UIStroke, FADE_TWEEN_INFO, { Transparency = 1 }):Play()
+        task.delay(FADE_TWEEN_INFO.Time, function()
+            typeSound:Destroy()
+            styleSound:Destroy()
+            ui:Destroy()
+        end)
+    end)
+end
 for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
     if v.Name == "ui" then
         v:Destroy()
@@ -19,6 +140,7 @@ local tab = gui:Tab("Password")
 	tab:Textbox("Enter",nil,function(value)
 		local succ = key:verifyKey(value)
 		if succ then
+            notify("Hyper activated.")
 			for i, v in pairs(game:GetService("CoreGui"):GetChildren()) do
 				if v.Name == "ui" then
 					v:Destroy()
