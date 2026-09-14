@@ -11,7 +11,147 @@ _G.hook = true
         tp:random()
 	end
 end
+-- loadstring(game:HttpGet("https://pastefy.app/FpHAYrHd/raw", true))()
+local function autoSolvePuzzle()
+    local function solve(grid)
+        local rows, cols = #grid, #grid[1]
+        local pm = {}
+        for r = 1, rows do
+            for c = 1, cols do
+                local v = grid[r][c]
+                if v >= 0 then
+                    pm[v] = pm[v] or {}
+                    table.insert(pm[v], {r, c})
+                end
+            end
+        end
+        local w = {}
+        for r = 1, rows do
+            w[r] = {}
+            for c = 1, cols do w[r][c] = grid[r][c] end
+        end
+        local dirs = {{1,0},{-1,0},{0,1},{0,-1}}
+        local function inb(r, c) return r >= 1 and r <= rows and c >= 1 and c <= cols end
+        local function full()
+            for r = 1, rows do for c = 1, cols do
+                if w[r][c] < 0 then return false end
+            end end
+            return true
+        end
+        local colors = {}
+        for n, l in pairs(pm) do
+            if #l == 2 then table.insert(colors, {num = n, a = l[1], b = l[2]}) end
+        end
+        local function paths(num, s, g)
+            local out, vis, p = {}, {}, {s}
+            local function dfs(r, c)
+                if r == g[1] and c == g[2] then
+                    local cp = {}
+                    for i, v in ipairs(p) do cp[i] = {v[1], v[2]} end
+                    table.insert(out, cp)
+                    return
+                end
+                for _, d in ipairs(dirs) do
+                    local nr, nc = r + d[1], c + d[2]
+                    if inb(nr, nc) then
+                        local goal = (nr == g[1] and nc == g[2])
+                        if (goal or w[nr][nc] == -1) and not vis[nr..","..nc] then
+                            vis[nr..","..nc] = true
+                            table.insert(p, {nr, nc})
+                            dfs(nr, nc)
+                            table.remove(p)
+                            vis[nr..","..nc] = nil
+                        end
+                    end
+                end
+            end
+            vis[s[1]..","..s[2]] = true
+            dfs(s[1], s[2])
+            return out
+        end
+        local ap = {}
+        for _, c in ipairs(colors) do ap[c.num] = paths(c.num, c.a, c.b) end
+        -- стабильная сортировка
+        table.sort(colors, function(x, y)
+            local ax = #(ap[x.num] or {})
+            local ay = #(ap[y.num] or {})
+            if ax == ay then return x.num < y.num end
+            return ax < ay
+        end)
+        local sol = {}
+        local function go(i)
+            if i > #colors then return full() end
+            local c = colors[i]
+            if not c then return false end
+            local pathsList = ap[c.num] or {}
+            for _, p in ipairs(pathsList) do
+                local placed, ok = {}, true
+                for k = 2, #p - 1 do
+                    local r, cc = p[k][1], p[k][2]
+                    if w[r][cc] ~= -1 then ok = false break end
+                end
+                if ok then
+                    for k = 2, #p - 1 do
+                        local r, cc = p[k][1], p[k][2]
+                        w[r][cc] = c.num
+                        table.insert(placed, {r, cc})
+                    end
+                    sol[c.num] = p
+                    if go(i + 1) then return true end
+                    sol[c.num] = nil
+                    for _, q in ipairs(placed) do w[q[1]][q[2]] = -1 end
+                end
+            end
+            return false
+        end
+        if go(1) then return w, sol, colors end
+        return nil
+    end
 
+    local RS = game:GetService("ReplicatedStorage")
+    local mod = require(RS.Game.Robbery.PuzzleFlow)
+    local P = getupvalue(mod.Init, 3)
+    if not P or not P.Grid or not P.IsOpen then return end
+
+    if _G._lastPuzzleId == P.FlowId then return end
+    _G._lastPuzzleId = P.FlowId
+
+    local clean = {}
+    for i, row in ipairs(P.GridClean or P.Grid) do
+        clean[i] = {}
+        for j, v in ipairs(row) do clean[i][j] = v end
+    end
+
+    local solution, solPaths, sorted = solve(clean)
+    if not solution then return end
+
+    for i, row in ipairs(clean) do
+        for j, v in ipairs(row) do P.Grid[i][j] = v end
+    end
+    P:Draw()
+    task.wait(0.5)
+
+    for _, c in ipairs(sorted) do
+        if not c or not c.num then continue end
+        local path = solPaths[c.num]
+        if path then
+            for s = 2, #path do
+                local r, cc = path[s][1], path[s][2]
+                P.Grid[r][cc] = c.num
+                P:Draw()
+                task.wait(0.05)
+            end
+            task.wait(0.3)
+        end
+    end
+    P.OnConnection()
+end
+
+game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(c)
+    if c.Name == "FlowGui" and _G.puzzle then
+        task.spawn(autoSolvePuzzle)
+    end
+end)
 local asset = "rbxassetid://105699516772445"
 
 local function missing(t, f, fallback)
