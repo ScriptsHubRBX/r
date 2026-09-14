@@ -199,8 +199,10 @@ rob:Button("Cargo Train",function()
 	removeui()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/tra', true))()
 end)
-
-setting:Toggle("Auto Puzzle Power Plant [Detected]", _G.puzzle, function(value)
-	_G.puzzle = value
-	saveCurrent()
-end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptsHubRBX/Server/refs/heads/main/high"))()
+if _G.high then
+	setting:Toggle("Auto Puzzle Power Plant [Detected]", _G.puzzle, function(value)
+		_G.puzzle = value
+		saveCurrent()
+	end)
+end
