@@ -3,6 +3,7 @@ local SAVE_FILE = "jailbreak_hyper-saves.json"
 
 local defaultSaves = {
 	tp = nil,
+	puzzle = false
 }
 
 local function loadSaves()
@@ -27,12 +28,14 @@ local function saveCurrent()
 	if not writefile then return end
 	local current = {
 		tp = _G.tp,
+		puzzle = _G.puzzle
 	}
 	pcall(writefile, SAVE_FILE, HttpService:JSONEncode(current))
 end
 
 local saves = loadSaves()
 _G.tp = saves.tp
+_G.puzzle = saves.puzzle
 local is = false
 local change = false
 local jb = false
@@ -142,6 +145,7 @@ local UI = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Scrip
 local window = UI:Window("Hyper 🌈")
 local nif = UI:Notification("Welcome to", game:GetService("Players").LocalPlayer.Name, "Okay!")
 local rob = window:Tab("Robbers")
+local setting = window:Tab("Setting")
 rob:Label("Please use alt accounts")
 local tab = {"JBValues "..b, "Changelogs "..c, "Random Server 🟢"}
 rob:Dropdown("Teleport Info", tab,function(value)
@@ -194,4 +198,9 @@ end)
 rob:Button("Cargo Train",function()
 	removeui()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/ScriptsHubRBX/r/refs/heads/main/tra', true))()
+end)
+
+setting:Toggle("Auto Puzzle Power Plant [Detected]", _G.puzzle, function(value)
+	_G.puzzle = value
+	saveCurrent()
 end)
